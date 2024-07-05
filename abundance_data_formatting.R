@@ -84,4 +84,20 @@ row_sums <- rowSums(aggregated_df_chordata[, !names(aggregated_df_chordata) %in%
 aggregated_df_chordata$total_count_absolute <- row_sums
 aggregated_df_chordata$total_count_percentages <- row_sums / sum(row_sums) * 100
 
+
+
+
 aggregated_df_chordata_overview <- aggregated_df_chordata %>% select(grouping_rank, total_count_percentages)
+
+
+######################### Krona
+
+# Group by the vector of column names and summarize all other columns
+grouped_df <- df %>%
+  group_by(across(all_of(ranks))) %>%
+  summarise(across(everything(), sum, na.rm = TRUE), .groups = 'drop')
+row_sums <- rowSums(grouped_df[, !names(grouped_df) %in% ranks])
+grouped_df$total_count_absolute <- row_sums
+grouped_df <- grouped_df %>% select(-starts_with("RSDE"))
+grouped_df <- grouped_df[, c(ncol(grouped_df), seq_along(names(grouped_df)[-ncol(grouped_df)]))]
+write.table(grouped_df, kronafile, sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE)

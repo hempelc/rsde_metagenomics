@@ -6,7 +6,7 @@ library(rlang)   # For working with symbols and unquoting
 
 # Specify the path to the Parquet file
 file <- "/Users/simplexdna/Desktop/final_table_tax.parquet"
-
+kronafile <- "/Users/simplexdna/Desktop/final_table_tax_krona.tsv"
 # Define a vector of taxonomic ranks
 ranks <- c("domain", "phylum", "class", "order", "family", "genus", "species")
 
@@ -86,3 +86,15 @@ aggregated_df_chordata <- df_chordata_rankToKeep %>%
 row_sums <- rowSums(aggregated_df_chordata[, !names(aggregated_df_chordata) %in% grouping_rank])
 aggregated_df_chordata$total_count_absolute <- row_sums
 aggregated_df_chordata$total_count_percentages <- row_sums / sum(row_sums) * 100
+
+######################### Krona
+
+# Group by the vector of column names and summarize all other columns
+grouped_df <- df_sub %>%
+  group_by(across(all_of(ranks))) %>%
+  summarise(across(everything(), sum, na.rm = TRUE), .groups = 'drop')
+row_sums <- rowSums(grouped_df[, !names(grouped_df) %in% ranks])
+grouped_df$total_count_absolute <- row_sums
+grouped_df <- grouped_df %>% select(-starts_with("RSDE"))
+grouped_df <- grouped_df[, c(ncol(grouped_df), seq_along(names(grouped_df)[-ncol(grouped_df)]))]
+write.table(grouped_df, kronafile, sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE)
