@@ -10,9 +10,6 @@ file <- "/Users/simplexdna/Desktop/final_table_tax.parquet"
 # Define a vector of taxonomic ranks
 ranks <- c("domain", "phylum", "class", "order", "family", "genus", "species")
 
-# Define a vector of taxonomic ranks used for the packedCircles graph
-packedCircles_ranks <- c("domain", "phylum", "class", "order")
-  
 # Define the ranks to group by for the different levels we analyse (all, eukaryota, holozoa, eukaryotic non-holozoa, chordata)
 grouping_rank_all <- "domain"
 grouping_rank_eukaryota <- "phylum"
@@ -291,6 +288,19 @@ write.csv(aggregated_df_holozoa_overview, file.path(outdir, paste0("aggregated_d
   grouping_rank_holozoa, ".csv")), row.names = FALSE)
 
 
+######################### Krona
+# Group by the vector of column names and summarize all other columns
+krona_df <- df %>%
+  group_by(across(all_of(ranks))) %>%
+  summarise(across(everything(), sum, na.rm = TRUE), .groups = 'drop')
+row_sums <- rowSums(krona_df[, !names(krona_df) %in% ranks])
+krona_df$total_count_absolute <- row_sums
+krona_df <- krona_df %>% select(-starts_with("RSDE"))
+krona_df <- krona_df[, c(ncol(krona_df), seq_along(names(krona_df)[-ncol(krona_df)]))]
+write.table(krona_df, file.path(outdir, "final_table_tax_krona.tsv"), sep = "\t",
+  row.names = FALSE, col.names = FALSE, quote = FALSE)
+
+
 ########################## Chordata zoom in
 # Create chordata df
 df_chordata <- df_holozoa %>% filter(phylum == "Chordata")
@@ -310,19 +320,52 @@ aggregated_df_chordata$total_count_percentages <- row_sums / sum(row_sums) * 100
 # Cut down the df to relevant columns and save to outdir
 aggregated_df_chordata_overview <- aggregated_df_chordata %>% select(grouping_rank_chordata, total_count_percentages)
 write.csv(aggregated_df_chordata_overview, file.path(outdir, paste0("aggregated_df_chordata_",
-  grouping_rank_chordata, ".csv")), row.names = FALSE)
+                                                                    grouping_rank_chordata, ".csv")), row.names = FALSE)
 
-######################### Krona
-# Group by the vector of column names and summarize all other columns
-krona_df <- df %>%
-  group_by(across(all_of(ranks))) %>%
-  summarise(across(everything(), sum, na.rm = TRUE), .groups = 'drop')
-row_sums <- rowSums(krona_df[, !names(krona_df) %in% ranks])
-krona_df$total_count_absolute <- row_sums
-krona_df <- krona_df %>% select(-starts_with("RSDE"))
-krona_df <- krona_df[, c(ncol(krona_df), seq_along(names(krona_df)[-ncol(krona_df)]))]
-write.table(krona_df, file.path(outdir, "final_table_tax_krona.tsv"), sep = "\t",
-  row.names = FALSE, col.names = FALSE, quote = FALSE)
+# Sum up species per order and familuy
+krona_file <- "/Users/simplexdna/GDrive KAUST/Elisa & Chris/RSDE/Paper 1 - taxonomy paper/data_formatting_results/final_table_tax_krona.tsv"
+krona_column_names <- c("abun", "domain", "phylum", "class", "order", "family", "genus", "species")
+krona_df <- read.table(krona_file, header = FALSE, sep = "\t", col.names = krona_column_names)
+krona_df <- krona_df %>% select(-abun)
+krona_df_chordata <- krona_df %>% filter(phylum == "Chordata")
+
+# Summarize number of species per class
+df_chordata_summary_class <- krona_df_chordata %>%
+  select(-all_of(c("domain", "phylum", "order", "family", "genus"))) %>%
+  group_by(class) %>%
+  filter(!is.na(class)) %>%
+  summarize(
+    num_species = n_distinct(species, na.rm = TRUE)
+  )  %>%
+  filter(num_species > 0)
+# Save
+write.csv(df_chordata_summary_class, file.path(outdir, "chordata_class_species_number.csv"), row.names = FALSE)
+
+
+# Summarize number of species per order
+df_chordata_summary_order <- krona_df_chordata %>%
+  select(-all_of(c("domain", "phylum", "class", "family", "genus"))) %>%
+  group_by(order) %>%
+  filter(!is.na(order)) %>%
+  summarize(
+    num_species = n_distinct(species, na.rm = TRUE)
+  )  %>%
+  filter(num_species > 0)
+# Save
+write.csv(df_chordata_summary_order, file.path(outdir, "chordata_order_species_number.csv"), row.names = FALSE)
+
+# Summarize number of species per family
+df_chordata_summary_family <- krona_df_chordata %>%
+  select(-all_of(c("domain", "phylum", "class", "order", "genus"))) %>%
+  group_by(family) %>%
+  filter(!is.na(family)) %>%
+  summarize(
+    num_species = n_distinct(species, na.rm = TRUE)
+  )  %>%
+  filter(num_species > 0)
+# Save
+write.csv(df_chordata_summary_family, file.path(outdir, "chordata_family_species_number.csv"), row.names = FALSE)
+
 
 ######################### Sunburst diagram formatting
 sunburst_df <- df %>%
