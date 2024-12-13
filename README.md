@@ -1,2 +1,2 @@
 # rsde_metagenomics
-RSDE metagenomics data anlysis
+Red Sea Decade Expedition metagenomics data anlysis
