@@ -6,7 +6,7 @@ from collections import Counter
 ranks = ["domain", "phylum", "class", "order", "family", "genus", "species"]
 
 # Read the dataset
-df = pd.read_csv("/Users/simplexdna/Desktop/chords_with_all_meta.csv", index_col=0)
+df = pd.read_csv("chords_with_all_meta.csv", index_col=0)
 
 # Step 1: Identify columns that start with "RSDE"
 rsde_columns = [col for col in df.columns if col.startswith("RSDE")]
@@ -71,7 +71,7 @@ class_df["total"] = list(Counter(final_df["class"]).values())
 for habitat in list(np.unique(habitat_row.values)):
     fig = px.bar(class_df[habitat], text=class_df[habitat].values)
     fig.update_yaxes(range=[0, 27])
-    fig.write_image(f"/Users/simplexdna/Desktop/chords_{habitat}.svg")
+    fig.write_image(f"chords_{habitat}.svg")
 
 
 # Venn diagram
