@@ -17,10 +17,10 @@ library(phyloseq)
 
 
 # Define file
-df_file <- "/Users/simplexdna/Desktop/final_table_tax.csv"
+df_file <- "final_table_tax.csv"
 
 # Make folder for plots
-plot_outdir <- "/Users/simplexdna/Desktop/metagenomics_pca"
+plot_outdir <- "metagenomics_pca"
 dir.create(plot_outdir, showWarnings = FALSE)
 
 # Read in file
