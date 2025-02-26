@@ -4,7 +4,7 @@ library(scales)
 library(forcats)
 
 # Define name of the output directory in which graphs are saved
-outdir <- "/Users/simplexdna/GDrive KAUST/Elisa & Chris/RSDE/Paper 1 - taxonomy paper/data_visualizations"
+outdir <- "data_visualizations"
 
 #################### Create output dir
 if (!dir.exists(outdir)) {
@@ -12,7 +12,7 @@ if (!dir.exists(outdir)) {
 }
 
 #################### Radial chart
-df_chordata_summary <- read.csv("/Users/simplexdna/GDrive KAUST/Elisa & Chris/RSDE/Paper 1 - taxonomy paper/data_formatting_results/chordata_order_species_number_manual_edit.csv")
+df_chordata_summary <- read.csv("chordata_order_species_number_manual_edit.csv")
 
 # Group order
 ## Convert the supergroup column to a factor with the specified levels
