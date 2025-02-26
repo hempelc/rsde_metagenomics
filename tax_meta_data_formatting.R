@@ -6,13 +6,11 @@ library(tibble)
 ##################### Settings
 
 # Specify the path to the Parquet file
-
-file <- "/Users/simplexdna/Desktop/final_table_tax.parquet"
+file <- "final_table_tax.parquet"
 # Define a vector of taxonomic ranks
 ranks <- c("domain", "phylum", "class", "order", "family", "genus", "species")
-
 # Define name of the output directory in which all formatted tables are saved
-outdir <- "/Users/simplexdna/GDrive KAUST/Elisa & Chris/RSDE/Paper 1 - taxonomy paper/data_formatting_results"
+outdir <- "data_formatting_results"
 
 ################### Define taxonomic grouping
 holozoa_phyla <- c("Porifera", "Cnidaria", "Ctenophora","Placozoa","Xenacoelomorpha",
@@ -351,8 +349,6 @@ if (!dir.exists(outdir)) {
 }
 
 ################### Standardizing taxonomy
-# TO DO: polish standardization of taxonomy
-
 # Standardize species rank by replacing:
 # Starts with: bacterium_ OR uncultured_ OR miscellaneous_ OR cyanobiont_ OR unidentified_ OR archaeon_ OR haloarchaeon_
 # Ends with _bacterium OR _metagenome OR _archaeon OR _environmental_sample OR _cyanobacterium
@@ -430,7 +426,7 @@ df <- df %>%
 
 ###################### Aggregate by depth zones
 # Read the metadata CSV file
-metadata_df <- read.csv("/Users/simplexdna/GDrive KAUST/Elisa & Chris/RSDE/Paper 1 - taxonomy paper/RSDE Metagenomics Metadata - edited.csv")
+metadata_df <- read.csv("RSDE Metagenomics Metadata - edited.csv")
 metadata_df <- metadata_df[c("Sample_ID", "Habitat")]
 # Set "Sample_ID" as the row names and transpose the DataFrame
 metadata_df <- metadata_df %>%
@@ -492,8 +488,8 @@ metadata_df2 <- cbind(new_cols_df, metadata_df)
 
 tax_meta_df <- rbind(tax_meta_df, metadata_df2)
 
-write.csv(tax_meta_df, "/Users/simplexdna/Desktop/final_table_tax2.csv")
-tax_meta_df <- read.csv("/Users/simplexdna/Desktop/final_table_tax.csv", row.names = 1)
+write.csv(tax_meta_df, "final_table_tax2.csv")
+tax_meta_df <- read.csv("final_table_tax.csv", row.names = 1)
 
 chord_orders <- c(
   "Albuliformes",
@@ -526,7 +522,7 @@ chord_orders <- c(
 filtered_df <- tax_meta_df %>%
   filter(order %in% chord_orders | row_number() > (n() - 5))
 
-write.csv(filtered_df, "/Users/simplexdna/Desktop/chords_with_all_meta.csv")
+write.csv(filtered_df, "chords_with_all_meta.csv")
 
 
 ### Aggregate samples
