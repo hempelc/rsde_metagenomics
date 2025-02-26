@@ -2,12 +2,12 @@ import pandas as pd
 import plotly.express as px
 import os
 
-outdir = "/Users/simplexdna/GDrive KAUST/Elisa & Chris/RSDE/Paper 1 - taxonomy paper/data_visualizations"
+outdir = "data_visualizations"
 
-euk_depth_file = "/Users/simplexdna/GDrive KAUST/Elisa & Chris/RSDE/Paper 1 - taxonomy paper/data_formatting_results/result_euk_depth.csv"
-euk_region_file = "/Users/simplexdna/GDrive KAUST/Elisa & Chris/RSDE/Paper 1 - taxonomy paper/data_formatting_results/result_euk_region.csv"
-non_euk_depth_file = "/Users/simplexdna/GDrive KAUST/Elisa & Chris/RSDE/Paper 1 - taxonomy paper/data_formatting_results/result_non_euk_depth.csv"
-non_euk_region_file = "/Users/simplexdna/GDrive KAUST/Elisa & Chris/RSDE/Paper 1 - taxonomy paper/data_formatting_results/result_non_euk_region.csv"
+euk_depth_file = "data_formatting_results/result_euk_depth.csv"
+euk_region_file = "data_formatting_results/result_euk_region.csv"
+non_euk_depth_file = "data_formatting_results/result_non_euk_depth.csv"
+non_euk_region_file = "data_formatting_results/result_non_euk_region.csv"
 
 euk_depth_df = pd.read_csv(euk_depth_file, index_col=0).melt(
     id_vars=["depth_category"], var_name="supergroup", value_name="num_species"
