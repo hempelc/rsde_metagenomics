@@ -3,9 +3,9 @@ import pandas as pd
 import os
 
 # Define name of the input directory in which all formatted tables are saved
-indir = "/Users/simplexdna/GDrive KAUST/Elisa & Chris/RSDE/Paper 1 - taxonomy paper/data_formatting_results"
+indir = "data_formatting_results"
 # Define name of the output directory in which graphs are saved
-outdir = "/Users/simplexdna/GDrive KAUST/Elisa & Chris/RSDE/Paper 1 - taxonomy paper/data_visualizations"
+outdir = "data_visualizations"
 
 
 df = pd.read_csv(os.path.join(indir, "sunburst_df.csv"))
