@@ -4,9 +4,9 @@ library(scales)
 library(forcats)
 
 # Define name of the input directory in which all formatted tables are saved
-indir <- "/Users/simplexdna/GDrive KAUST/Elisa & Chris/RSDE/Paper 1 - taxonomy paper/data_formatting_results"
+indir <- "data_formatting_results"
 # Define name of the output directory in which graphs are saved
-outdir <- "/Users/simplexdna/GDrive KAUST/Elisa & Chris/RSDE/Paper 1 - taxonomy paper/data_visualizations"
+outdir <- "data_visualizations"
 
 #################### Create output dir
 if (!dir.exists(outdir)) {
@@ -55,21 +55,21 @@ ggplot(df_eukaryota_summary, aes(x = phylum, y = families, fill = supergroup)) +
 ggsave(file=file.path(outdir, "eukaryota_phyla_family_number.svg"), width=10, height=5, dpi=300)
 
 ######################## Pie charts
-assigned_df <- read.csv("/Users/simplexdna/GDrive KAUST/Elisa & Chris/RSDE/Paper 1 - taxonomy paper/data_formatting_results/assigned_df.csv")
+assigned_df <- read.csv("data_formatting_results/assigned_df.csv")
 ggplot(assigned_df, aes(x="", y=total_count_percentages, fill= assignment_status) )+ 
   geom_bar(width = 1, stat = "identity") + coord_polar("y", start=0,direction = -1) + theme_void() +
   labs(x = NULL, y = NULL, fill = NULL) + scale_fill_brewer(palette="Blues", direction=-1) +
   geom_text(aes(label = paste0(round(total_count_percentages, 1), "%")), size=3, position=position_stack(vjust=0.5)) 
 ggsave(file=file.path(outdir, "assigned_pie.svg"), width=10, height=5, dpi=300)
 
-domain_df <- read.csv("/Users/simplexdna/GDrive KAUST/Elisa & Chris/RSDE/Paper 1 - taxonomy paper/data_formatting_results/domain_df.csv")
+domain_df <- read.csv("data_formatting_results/domain_df.csv")
 ggplot(domain_df, aes(x="", y=total_count_percentages, fill= domain) )+ 
   geom_bar(width = 1, stat = "identity") + coord_polar("y", start=0,direction = -1) + theme_void() +
   labs(x = NULL, y = NULL, fill = NULL) + scale_fill_brewer(palette="Blues", direction=-1) +
   geom_text(aes(label = percent(total_count_percentages, 0.1) ), size=3, position=position_stack(vjust=0.5)) 
 ggsave(file=file.path(outdir, "domain_pie.svg"), width=10, height=5, dpi=300)
 
-holozoa_df <- read.csv("/Users/simplexdna/GDrive KAUST/Elisa & Chris/RSDE/Paper 1 - taxonomy paper/data_formatting_results/non_holozoa_vs_holozoa_df_df.csv")
+holozoa_df <- read.csv("data_formatting_results/non_holozoa_vs_holozoa_df_df.csv")
 ggplot(holozoa_df, aes(x="", y=total_count_percentages, fill= holozoan_status) )+ 
   geom_bar(width = 1, stat = "identity") + coord_polar("y", start=0,direction = -1) + theme_void() +
   labs(x = NULL, y = NULL, fill = NULL) + scale_fill_brewer(palette="Blues", direction=-1) +
